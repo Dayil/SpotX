@@ -286,11 +286,11 @@ catch {
     catch { }
 }
 
-$spotifyDirectory = "$env:APPDATA\Spotify"
+$spotifyDirectory = "$env:APPDATA\Roaming\Spotify"
 $spotifyDirectory2 = "$env:LOCALAPPDATA\Spotify"
 $spotifyExecutable = "$spotifyDirectory\Spotify.exe"
-$exe_bak = "$spotifyDirectory\Spotify.bak"
-$cache_folder = "$env:APPDATA\Spotify\cache"
+$exe_bak = "$spotifyDirectory\Roaming\Spotify\Spotify.bak"
+$cache_folder = "$env:APPDATA\Roaming\Spotify\Spotify\cache"
 $spotifyUninstall = "$env:TEMP\SpotifyUninstall.exe"
 $start_menu = "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Spotify.lnk"
 $upgrade_client = $false
@@ -1087,7 +1087,7 @@ function extract ($counts, $method, $name, $helper, $add) {
         "one" { 
             if ($method -eq "zip") {
                 Add-Type -Assembly 'System.IO.Compression.FileSystem'
-                $xpui_spa_patch = "$env:APPDATA\Spotify\Apps\xpui.spa"
+                $xpui_spa_patch = "$env:APPDATA\Roaming\Spotify\Spotify\Apps\xpui.spa"
                 $zip = [System.IO.Compression.ZipFile]::Open($xpui_spa_patch, 'update')   
                 $file = $zip.GetEntry($name)
                 $reader = New-Object System.IO.StreamReader($file.Open())
@@ -1109,7 +1109,7 @@ function extract ($counts, $method, $name, $helper, $add) {
         }
         "more" {  
             Add-Type -Assembly 'System.IO.Compression.FileSystem'
-            $xpui_spa_patch = "$env:APPDATA\Spotify\Apps\xpui.spa"
+            $xpui_spa_patch = "$env:APPDATA\Roaming\Spotify\Spotify\Apps\xpui.spa"
             $zip = [System.IO.Compression.ZipFile]::Open($xpui_spa_patch, 'update') 
             $zip.Entries | Where-Object FullName -like $name | ForEach-Object {
                 $reader = New-Object System.IO.StreamReader($_.Open())
@@ -1144,18 +1144,18 @@ Pop-Location
 Start-Sleep -Milliseconds 200
 Remove-Item -Recurse -LiteralPath $tempDirectory 
 
-$xpui_spa_patch = "$env:APPDATA\Spotify\Apps\xpui.spa"
-$xpui_js_patch = "$env:APPDATA\Spotify\Apps\xpui\xpui.js"
-$xpui_css_patch = "$env:APPDATA\Spotify\Apps\xpui\xpui.css"
-$xpui_lic_patch = "$env:APPDATA\Spotify\Apps\xpui\licenses.html"
-if ($ru) { $xpui_ru_patch = "$env:APPDATA\Spotify\Apps\xpui\i18n\ru.json" }
+$xpui_spa_patch = "$env:APPDATA\Roaming\Spotify\Spotify\Apps\xpui.spa"
+$xpui_js_patch = "$env:APPDATA\Roaming\Spotify\Spotify\Apps\xpui\xpui.js"
+$xpui_css_patch = "$env:APPDATA\Roaming\Spotify\Spotify\Apps\xpui\xpui.css"
+$xpui_lic_patch = "$env:APPDATA\Roaming\Spotify\Spotify\Apps\xpui\licenses.html"
+if ($ru) { $xpui_ru_patch = "$env:APPDATA\Roaming\Spotify\Spotify\Apps\xpui\i18n\ru.json" }
 $test_spa = Test-Path -Path $xpui_spa_patch
 $test_js = Test-Path -Path $xpui_js_patch
-$xpui_js_bak_patch = "$env:APPDATA\Spotify\Apps\xpui\xpui.js.bak"
-$xpui_css_bak_patch = "$env:APPDATA\Spotify\Apps\xpui\xpui.css.bak"
-$xpui_lic_bak_patch = "$env:APPDATA\Spotify\Apps\xpui\licenses.html.bak"
-if ($ru) { $xpui_ru_bak_patch = "$env:APPDATA\Spotify\Apps\xpui\i18n\ru.json.bak" }
-$spotify_exe_bak_patch = "$env:APPDATA\Spotify\Spotify.bak"
+$xpui_js_bak_patch = "$env:APPDATA\Roaming\Spotify\Spotify\Apps\xpui\xpui.js.bak"
+$xpui_css_bak_patch = "$env:APPDATA\Roaming\Spotify\Spotify\Apps\xpui\xpui.css.bak"
+$xpui_lic_bak_patch = "$env:APPDATA\Roaming\Spotify\Spotify\Apps\xpui\licenses.html.bak"
+if ($ru) { $xpui_ru_bak_patch = "$env:APPDATA\Roaming\Spotify\Spotify\Apps\xpui\i18n\ru.json.bak" }
+$spotify_exe_bak_patch = "$env:APPDATA\Roaming\Spotify\Spotify.bak"
 
 
 if ($test_spa -and $test_js) {
@@ -1171,7 +1171,7 @@ if ($test_js) {
 
     # Delete all files except "en", "ru" and "__longest"
     if ($ru) {
-        $patch_lang = "$env:APPDATA\Spotify\Apps\xpui\i18n"
+        $patch_lang = "$env:APPDATA\Roaming\Spotify\Spotify\Apps\xpui\i18n"
         Remove-Item $patch_lang -Exclude *en*, *ru*, *__longest* -Recurse
     }
 
@@ -1307,7 +1307,7 @@ if (!($test_js) -and !($test_spa)) {
 
 If ($test_spa) {
 
-    $bak_spa = "$env:APPDATA\Spotify\Apps\xpui.bak"
+    $bak_spa = "$env:APPDATA\Roaming\Spotify\Spotify.bak"
     $test_bak_spa = Test-Path -Path $bak_spa
 
     # Make a backup copy of xpui.spa if it is original
@@ -1325,7 +1325,7 @@ If ($test_spa) {
             Remove-Item $xpui_spa_patch -Recurse -Force
             Rename-Item $bak_spa $xpui_spa_patch
 
-            $spotify_exe_bak_patch = "$env:APPDATA\Spotify\Spotify.bak"
+            $spotify_exe_bak_patch = "$env:APPDATA\Roaming\Spotify\Spotify.bak"
             $test_spotify_exe_bak = Test-Path -Path $spotify_exe_bak_patch
             if ($test_spotify_exe_bak) {
                 Remove-Item $spotifyExecutable -Recurse -Force
@@ -1337,7 +1337,7 @@ If ($test_spa) {
             Pause
             Exit
         }
-        $spotify_exe_bak_patch = "$env:APPDATA\Spotify\Spotify.bak"
+        $spotify_exe_bak_patch = "$env:APPDATA\Roaming\Spotify\Spotify.bak"
         $test_spotify_exe_bak = Test-Path -Path $spotify_exe_bak_patch
         if ($test_spotify_exe_bak) {
             Remove-Item $spotifyExecutable -Recurse -Force
@@ -1489,9 +1489,9 @@ if (!($no_shortcut)) {
     $desktop_folder = DesktopFolder
 
     If (!(Test-Path $desktop_folder\Spotify.lnk)) {
-        $source = "$env:APPDATA\Spotify\Spotify.exe"
+        $source = "$env:APPDATA\Roaming\Spotify\Spotify.exe"
         $target = "$desktop_folder\Spotify.lnk"
-        $WorkingDir = "$env:APPDATA\Spotify"
+        $WorkingDir = "$env:APPDATA\Roaming\Spotify\Spotify"
         $WshShell = New-Object -comObject WScript.Shell
         $Shortcut = $WshShell.CreateShortcut($target)
         $Shortcut.WorkingDirectory = $WorkingDir
@@ -1502,7 +1502,7 @@ if (!($no_shortcut)) {
 
 # Create shortcut in start menu
 If (!(Test-Path $start_menu)) {
-    $source = "$env:APPDATA\Spotify\Spotify.exe"
+    $source = "$env:APPDATA\Roaming\Spotify\Spotify.exe"
     $target = $start_menu
     $WorkingDir = "$env:APPDATA\Spotify"
     $WshShell = New-Object -comObject WScript.Shell
@@ -1563,7 +1563,7 @@ if ($cache_install) {
         $WshShell2 = New-Object -comObject WScript.Shell
         $Shortcut2 = $WshShell2.CreateShortcut($target2)
         $Shortcut2.WorkingDirectory = $WorkingDir2
-        $Shortcut2.IconLocation = "$env:APPDATA\Spotify\Spotify.exe"
+        $Shortcut2.IconLocation = "$env:APPDATA\Roaming\Spotify\Spotify.exe"
         $Shortcut2.TargetPath = $source2
         $Shortcut2.Save()
     }
