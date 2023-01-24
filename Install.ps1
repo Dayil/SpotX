@@ -290,7 +290,7 @@ $spotifyDirectory = "$env:APPDATA\Roaming\Spotify"
 $spotifyDirectory2 = "$env:LOCALAPPDATA\Spotify"
 $spotifyExecutable = "$spotifyDirectory\Spotify.exe"
 $exe_bak = "$spotifyDirectory\Roaming\Spotify\Spotify.bak"
-$cache_folder = "$env:APPDATA\Roaming\Spotify\Spotify\cache"
+$cache_folder = "$env:APPDATA\Roaming\Spotify\cache"
 $spotifyUninstall = "$env:TEMP\SpotifyUninstall.exe"
 $start_menu = "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Spotify.lnk"
 $upgrade_client = $false
@@ -1087,13 +1087,13 @@ function extract ($counts, $method, $name, $helper, $add) {
         "one" { 
             if ($method -eq "zip") {
                 Add-Type -Assembly 'System.IO.Compression.FileSystem'
-                $xpui_spa_patch = "$env:APPDATA\Roaming\Spotify\Spotify\Apps\xpui.spa"
+                $xpui_spa_patch = "$env:APPDATA\Roaming\Spotify\Apps\xpui.spa"
                 $zip = [System.IO.Compression.ZipFile]::Open($xpui_spa_patch, 'update')   
                 $file = $zip.GetEntry($name)
                 $reader = New-Object System.IO.StreamReader($file.Open())
             }
             if ($method -eq "nonezip") {
-                $file = get-item $env:APPDATA\Spotify\Apps\xpui\$name
+                $file = get-item $env:APPDATA\Roaming\Spotify\Apps\xpui\$name
                 $reader = New-Object -TypeName System.IO.StreamReader -ArgumentList $file
             }
             $xpui = $reader.ReadToEnd()
@@ -1109,7 +1109,7 @@ function extract ($counts, $method, $name, $helper, $add) {
         }
         "more" {  
             Add-Type -Assembly 'System.IO.Compression.FileSystem'
-            $xpui_spa_patch = "$env:APPDATA\Roaming\Spotify\Spotify\Apps\xpui.spa"
+            $xpui_spa_patch = "$env:APPDATA\Roaming\Spotify\Apps\xpui.spa"
             $zip = [System.IO.Compression.ZipFile]::Open($xpui_spa_patch, 'update') 
             $zip.Entries | Where-Object FullName -like $name | ForEach-Object {
                 $reader = New-Object System.IO.StreamReader($_.Open())
@@ -1144,17 +1144,17 @@ Pop-Location
 Start-Sleep -Milliseconds 200
 Remove-Item -Recurse -LiteralPath $tempDirectory 
 
-$xpui_spa_patch = "$env:APPDATA\Roaming\Spotify\Spotify\Apps\xpui.spa"
-$xpui_js_patch = "$env:APPDATA\Roaming\Spotify\Spotify\Apps\xpui\xpui.js"
-$xpui_css_patch = "$env:APPDATA\Roaming\Spotify\Spotify\Apps\xpui\xpui.css"
-$xpui_lic_patch = "$env:APPDATA\Roaming\Spotify\Spotify\Apps\xpui\licenses.html"
-if ($ru) { $xpui_ru_patch = "$env:APPDATA\Roaming\Spotify\Spotify\Apps\xpui\i18n\ru.json" }
+$xpui_spa_patch = "$env:APPDATA\Roaming\Spotify\Apps\xpui.spa"
+$xpui_js_patch = "$env:APPDATA\Roaming\Spotify\Apps\xpui\xpui.js"
+$xpui_css_patch = "$env:APPDATA\Roaming\Spotify\Apps\xpui\xpui.css"
+$xpui_lic_patch = "$env:APPDATA\Roaming\Spotify\Apps\xpui\licenses.html"
+if ($ru) { $xpui_ru_patch = "$env:APPDATA\Roaming\Spotify\Apps\xpui\i18n\ru.json" }
 $test_spa = Test-Path -Path $xpui_spa_patch
 $test_js = Test-Path -Path $xpui_js_patch
-$xpui_js_bak_patch = "$env:APPDATA\Roaming\Spotify\Spotify\Apps\xpui\xpui.js.bak"
-$xpui_css_bak_patch = "$env:APPDATA\Roaming\Spotify\Spotify\Apps\xpui\xpui.css.bak"
-$xpui_lic_bak_patch = "$env:APPDATA\Roaming\Spotify\Spotify\Apps\xpui\licenses.html.bak"
-if ($ru) { $xpui_ru_bak_patch = "$env:APPDATA\Roaming\Spotify\Spotify\Apps\xpui\i18n\ru.json.bak" }
+$xpui_js_bak_patch = "$env:APPDATA\Roaming\Spotify\Apps\xpui\xpui.js.bak"
+$xpui_css_bak_patch = "$env:APPDATA\Roaming\Spotify\Apps\xpui\xpui.css.bak"
+$xpui_lic_bak_patch = "$env:APPDATA\Roaming\Spotify\Apps\xpui\licenses.html.bak"
+if ($ru) { $xpui_ru_bak_patch = "$env:APPDATA\Roaming\Spotify\Apps\xpui\i18n\ru.json.bak" }
 $spotify_exe_bak_patch = "$env:APPDATA\Roaming\Spotify\Spotify.bak"
 
 
@@ -1171,7 +1171,7 @@ if ($test_js) {
 
     # Delete all files except "en", "ru" and "__longest"
     if ($ru) {
-        $patch_lang = "$env:APPDATA\Roaming\Spotify\Spotify\Apps\xpui\i18n"
+        $patch_lang = "$env:APPDATA\Roaming\Spotify\Apps\xpui\i18n"
         Remove-Item $patch_lang -Exclude *en*, *ru*, *__longest* -Recurse
     }
 
@@ -1345,7 +1345,7 @@ If ($test_spa) {
         }
     }
     $zip.Dispose()
-    Copy-Item $xpui_spa_patch $env:APPDATA\Spotify\Apps\xpui.bak
+    Copy-Item $xpui_spa_patch $env:APPDATA\Roaming\Spotify\Apps\xpui.bak
 
     # Remove all languages except En and Ru from xpui.spa
     if ($ru) {
@@ -1491,7 +1491,7 @@ if (!($no_shortcut)) {
     If (!(Test-Path $desktop_folder\Spotify.lnk)) {
         $source = "$env:APPDATA\Roaming\Spotify\Spotify.exe"
         $target = "$desktop_folder\Spotify.lnk"
-        $WorkingDir = "$env:APPDATA\Roaming\Spotify\Spotify"
+        $WorkingDir = "$env:APPDATA\Roaming\Spotify"
         $WshShell = New-Object -comObject WScript.Shell
         $Shortcut = $WshShell.CreateShortcut($target)
         $Shortcut.WorkingDirectory = $WorkingDir
@@ -1504,7 +1504,7 @@ if (!($no_shortcut)) {
 If (!(Test-Path $start_menu)) {
     $source = "$env:APPDATA\Roaming\Spotify\Spotify.exe"
     $target = $start_menu
-    $WorkingDir = "$env:APPDATA\Spotify"
+    $WorkingDir = "$env:APPDATA\Roaming\Spotify"
     $WshShell = New-Object -comObject WScript.Shell
     $Shortcut = $WshShell.CreateShortcut($target)
     $Shortcut.WorkingDirectory = $WorkingDir
@@ -1519,7 +1519,7 @@ $update_test_exe = Test-Path -Path $spotifyExecutable
 if ($block_update) {
 
     if ($update_test_exe) {
-        $exe = "$env:APPDATA\Spotify\Spotify.exe"
+        $exe = "$env:APPDATA\Roaming\Spotify\Spotify.exe"
         $ANSI = [Text.Encoding]::GetEncoding(1251)
         $old = [IO.File]::ReadAllText($exe, $ANSI)
 
@@ -1574,7 +1574,7 @@ if ($cache_install) {
     $WshShell2 = New-Object -comObject WScript.Shell
     $Shortcut2 = $WshShell2.CreateShortcut($target2)
     $Shortcut2.WorkingDirectory = $WorkingDir2
-    $Shortcut2.IconLocation = "$env:APPDATA\Spotify\Spotify.exe"
+    $Shortcut2.IconLocation = "$env:APPDATA\Roaming\Spotify\Spotify.exe"
     $Shortcut2.TargetPath = $source2
     $Shortcut2.Save()
 
